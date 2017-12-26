@@ -1,0 +1,11 @@
+{
+  "name": "ethereum_course",
+  "version": "1.0.0",
+  "main": "index.js",
+  "repository": "https://github.com/KarovInal/ethereum_course.git",
+  "author": "KarovInal <bagov.ali07@gmail.com>",
+  "license": "MIT",
+  "dependencies": {
+    "web3": "ethereum/web3.js"
+  }
+}

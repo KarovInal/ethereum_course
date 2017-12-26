@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="ru">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>ETH</title>
+  <link rel="stylesheet" href="./index.css" />
+</head>
+
+<body>
+  <div class="container">
+    <h1>Ethereum курс</h1>
+
+    <h2 id="instructor"></h2>
+
+    <label for="name" class="label">Ваше имя</label>
+    <input id="name" type="text" />
+
+    <label for="age" class="label">Сколько лет?</label>
+    <input id="age" type="text" />
+
+    <button id="button">Отправить</button>
+  </div>
+
+  <script src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
+  <script src="./node_modules/web3/dist/web3.min.js"></script>
+  <script>
+    if (typeof web3 !== 'undefined') {
+      web3 = new Web3(web3.currentProvider);
+    } else {
+      web3 = new Web3(new Web3.providers.HttpProvider('http://localhost:8545'));
+    }
+
+    web3.eth.defaultAcount = web3.eth.accounts[0];
+
+    var CourserContract = web3.eth.contract([
+      {
+        "constant": false,
+        "inputs": [
+          {
+            "name": "_fName",
+            "type": "string"
+          },
+          {
+            "name": "_age",
+            "type": "uint256"
+          }
+        ],
+        "name": "setInstructor",
+        "outputs": [],
+        "payable": false,
+        "stateMutability": "nonpayable",
+        "type": "function"
+      },
+      {
+        "constant": true,
+        "inputs": [],
+        "name": "getInstructor",
+        "outputs": [
+          {
+            "name": "",
+            "type": "string"
+          },
+          {
+            "name": "",
+            "type": "uint256"
+          }
+        ],
+        "payable": false,
+        "stateMutability": "view",
+        "type": "function"
+      }
+    ]);
+
+    var Course = CourserContract.at('0x02f42f94d980262f8c12f0d71e5d7aad484a5352')
+    console.log(Course);
+
+    Course.getInstructor((error, result) => {
+      if(!error) {
+        $("#instructor").html(`${result[0]} ( ${result[1]} лет.)`);
+      } else {
+        $("#instructor").html('Error');
+        console.warn(error);
+      }
+
+      $('#button').click(() => {
+        Course.setInstructor(
+          $('#name').val(),
+          $('#age').val()
+        )
+      })
+    })
+  </script>
+</body>
+
+</html>
